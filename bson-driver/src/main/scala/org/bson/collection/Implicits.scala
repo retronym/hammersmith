@@ -29,9 +29,9 @@ object `package` {
    * TODO - Replace ThreadLocal with actor pipelines?
    * TODO - Execute around pattern
    */
-  val defaultSerializerPool = new ThreadLocal(new SimplePool(for (i <- 0 until 10) yield new DefaultBSONSerializer)) // todo - intelligent pooling
+  val defaultSerializerPool: ThreadLocal[SimplePool[BSONSerializer]] = new ThreadLocal(new SimplePool[BSONSerializer](for (i <- 0 until 10) yield new DefaultBSONSerializer)) // todo - intelligent pooling
 
-  val defaultDeserializerPool = new ThreadLocal(new SimplePool(for (i <- 0 until 10) yield new DefaultBSONDeserializer)) // todo - intelligent pooling
+  val defaultDeserializerPool: ThreadLocal[SimplePool[BSONDeserializer]] = new ThreadLocal(new SimplePool[BSONDeserializer](for (i <- 0 until 10) yield new DefaultBSONDeserializer)) // todo - intelligent pooling
 
   trait SerializableBSONDocumentLike[T <: BSONDocument] extends SerializableBSONObject[T] with Logging {
 

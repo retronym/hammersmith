@@ -84,7 +84,7 @@ class DirectConnectionSpec extends Specification
 
     val conn = MongoConnection()
 
-    def around[T <% Result](t: => T) = {
+    def around[T](t: => T)(implicit view: T => Result) = {
       conn.connected_? must eventually(beTrue)
       t
       // TODO - make sure this works (We are reusing)
@@ -201,13 +201,13 @@ class DirectConnectionSpec extends Specification
     })
     mongo.insert(Document("foo" -> "bar", "bar" -> "baz"))(handler)
     ok must eventually { beSome(true) }
-    id must not(beNull.eventually)
+    id must not(beNull[AnyRef].eventually)
     // TODO - Implement 'count'
     var doc: Document = null
     mongo.findOne(Document("foo" -> "bar"))((_doc: Document) => {
       doc = _doc
     })
-    doc must not(beNull.eventually)
+    doc must not(beNull[AnyRef].eventually)
     doc must eventually(havePairs("foo" -> "bar", "bar" -> "baz"))
   }
 
@@ -248,7 +248,7 @@ class DirectConnectionSpec extends Specification
 
   def countCmd(conn: MongoConnection) = {
     val mongo = conn(integrationTestDBName)("countCmd")
-    mongo.dropCollection() { success => }
+    mongo.dropCollection() { success => ()}
     var n: Int = -10
     mongo.count()((_n: Int) => n = _n)
     n must eventually(beEqualTo(0))
@@ -264,7 +264,7 @@ class DirectConnectionSpec extends Specification
 
   def batchInsert(conn: MongoConnection) = {
     val mongo = conn(integrationTestDBName)("batchInsert")
-    mongo.dropCollection() { success => }
+    mongo.dropCollection() { success => ()}
     mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {}
     var n: Int = -10
     mongo.count()((_n: Int) => n = _n)
@@ -272,7 +272,7 @@ class DirectConnectionSpec extends Specification
   }
   def simpleFindAndModify(conn: MongoConnection) = {
     val mongo = conn(integrationTestDBName)("findModify")
-    mongo.dropCollection() { success => }
+    mongo.dropCollection() { success => ()}
     mongo.insert(Document("name" -> "Next promo", "inprogress" -> false, "priority" -> 0, "tasks" -> Seq("select product", "add inventory", "do placement"))) {}
     mongo.insert(Document("name" -> "Biz report", "inprogress" -> false, "priority" -> 1, "tasks" -> Seq("run sales report", "email report"))) {}
     mongo.insert(Document("name" -> "Biz report", "inprogress" -> false, "priority" -> 2, "tasks" -> Seq("run marketing report", "email report"))) {}
@@ -284,14 +284,14 @@ class DirectConnectionSpec extends Specification
       update = Some(Document("$set" -> Document("inprogress" -> true, "started" -> startDate))),
       getNew = true) { doc: Option[Document] =>
         log.trace("FAM Doc: %s", doc)
-        doc.foreach(found = _)
+        doc.foreach(x => found = x)
       }
     found must eventually(havePairs("inprogress" -> true, "name" -> "Biz report", "started" -> startDate))
   }
 
   def findAndRemoveTest(conn: MongoConnection) = {
     val mongo = conn(integrationTestDBName)("findRemove")
-    mongo.dropCollection() { success => }
+    mongo.dropCollection() { success => () }
     mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {}
     var n: Int = -10
     mongo.count()((_n: Int) => n = _n)

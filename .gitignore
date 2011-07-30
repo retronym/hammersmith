@@ -20,3 +20,4 @@ mongo-driver/.project
 *.swo
 *.class
 log4j.properties
+.idea_modules

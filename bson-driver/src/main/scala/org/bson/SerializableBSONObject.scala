@@ -25,7 +25,7 @@ import java.io.{ InputStream, ByteArrayInputStream }
 /**
  * Type class base for anything you want to be serialized or deserialized
  */
-@implicitNotFound(msg = "Cannot find SerializableBSONObject type class for ${T}") 
+@implicitNotFound(msg = "Cannot find SerializableBSONObject type class for ${T}")
 trait SerializableBSONObject[T] {
 
   def encode(doc: T, out: OutputBuffer)

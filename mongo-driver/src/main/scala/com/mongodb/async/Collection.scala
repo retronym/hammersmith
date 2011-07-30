@@ -37,7 +37,7 @@ class Collection(val name: String)(implicit val db: DB) extends Logging {
   }
 
   def command(cmd: String): SingleDocQueryRequestFuture => Unit =
-    command(Document(cmd -> 1))_
+    (q => command(Document(cmd -> 1))(q))
 
   /**
    * Repeated deliberately enough times that i'll notice it later.

@@ -44,7 +44,7 @@ class ConcurrencyTestingSpec extends Specification
 
     val conn = MongoConnection()
 
-    def around[T <% Result](t: => T) = {
+    def around[T](t: => T)(implicit v: T => Result) = {
       conn.connected_? must eventually(beTrue)
       t
       // TODO - make sure this works (We are reusing)
@@ -57,7 +57,7 @@ class ConcurrencyTestingSpec extends Specification
 
   def batchInsert(conn: MongoConnection) = {
     val mongo = conn(integrationTestDBName)("batchConcurrencyInsert")
-    mongo.dropCollection() { success => }
+    mongo.dropCollection() { success => () }
     mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {}
     var n: Int = -10
     spawn { mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {} }

@@ -80,11 +80,11 @@ class MongoURISpec extends Specification with ThrownExpectations with Logging {
 
         connSet._1 must haveSuperclass[MongoConnection]
         testDB match {
-          case Some(dbName) => connSet._2 must beSome.which(_.name == dbName)
+          case Some(dbName) => connSet._2 must beSome[DB].which(_.name == dbName)
           case None => connSet._2 must beNone
         }
         testColl match {
-          case Some(collName) => connSet._3 must beSome.which(_.name == collName)
+          case Some(collName) => connSet._3 must beSome[Collection].which(_.name == collName)
           case None => connSet._3 must beNone
         }
       } catch {
