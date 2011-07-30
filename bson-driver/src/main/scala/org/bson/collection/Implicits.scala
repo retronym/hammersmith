@@ -68,7 +68,7 @@ object `package` {
       // TODO - Track key and level for clear error message?
       // TODO - Tail Call optimize me?
       // TODO - Optimize... trying to minimize number of loops but can we cut the instance checks?
-      for (k <- doc.keys) {
+      for (k ← doc.keys) {
         require(!(k contains "."), "Fields to be stored in MongoDB may not contain '.', which is a reserved character. Offending Key: " + k)
         require(!(k startsWith "$"), "Fields to be stored in MongoDB may not start with '$', which is a reserved character. Offending Key: " + k)
         if (doc.get(k).isInstanceOf[BSONDocument]) checkKeys(doc(k).asInstanceOf[T])
@@ -83,16 +83,16 @@ object `package` {
      */
     def checkID(doc: T): T = {
       doc.get("_id") match {
-        case Some(oid: ObjectId) => {
+        case Some(oid: ObjectId) ⇒ {
           log.debug("Found an existing OID")
           oid.notNew()
           //oid
         }
-        case Some(other) => {
+        case Some(other) ⇒ {
           log.debug("Found a non-OID ID")
           //other
         }
-        case None => {
+        case None ⇒ {
           val oid = new ObjectId()
           doc.put("_id", oid)
           log.trace("no ObjectId. Generated: %s", doc.get("_id"))

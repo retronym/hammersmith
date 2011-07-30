@@ -31,15 +31,15 @@ import org.specs2.matcher._
 import com.twitter.util.Time
 
 class ConcurrencyTestingSpec extends Specification
-  with Logging 
-  with HammersmithDefaultDBNames{
-  
+    with Logging
+    with HammersmithDefaultDBNames {
+
   def is =
     "The MongoDB Direct Connection" ^
       "Works concurrently" ^
       "Support lots of concurrent batch inserts" ! mongo(batchInsert) ^
       end
-      
+
   object mongo extends AroundOutside[MongoConnection] {
 
     val conn = MongoConnection()
@@ -60,15 +60,15 @@ class ConcurrencyTestingSpec extends Specification
     mongo.dropCollection() { success => () }
     mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {}
     var n: Int = -10
-    spawn { mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {} }
-    spawn { mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {} }
-    spawn { mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {} }
-    spawn { mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {} }
-    spawn { mongo.batchInsert((0 until 100).map(x => Document("x" -> x)): _*) {} }
+    spawn { mongo.batchInsert((0 until 100).map(x ⇒ Document("x" -> x)): _*) {} }
+    spawn { mongo.batchInsert((0 until 100).map(x ⇒ Document("x" -> x)): _*) {} }
+    spawn { mongo.batchInsert((0 until 100).map(x ⇒ Document("x" -> x)): _*) {} }
+    spawn { mongo.batchInsert((0 until 100).map(x ⇒ Document("x" -> x)): _*) {} }
+    spawn { mongo.batchInsert((0 until 100).map(x ⇒ Document("x" -> x)): _*) {} }
     var x: Int = 0
     var start = Time.now
     while (x < 10 && n != 600) {
-      mongo.count()((_n: Int) => n = _n)
+      mongo.count()((_n: Int) ⇒ n = _n)
       x += 1
       Thread.sleep(5.seconds.inMillis)
     }
