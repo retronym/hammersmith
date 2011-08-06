@@ -21,7 +21,6 @@ import org.bson.collection._
 import com.mongodb.async.futures._
 import org.bson.SerializableBSONObject
 
-object `package` extends Implicits with Imports
 
 trait Implicits {
   implicit def asGetMoreOp[T: SerializableBSONObject](f: Either[Throwable, (Long, Seq[T])] ⇒ Unit) = RequestFutures.getMore(f)

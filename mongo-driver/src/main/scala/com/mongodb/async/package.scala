@@ -15,20 +15,6 @@
  *
  */
 
-package com.mongodb.async
-package util
+package com.mongodb
 
-import org.bson.collection._
-import com.mongodb.async.futures._
-import org.bson.SerializableBSONObject
-import org.bson.util.{ Logging, ThreadLocal }
-import java.io.InputStream
-import com.twitter.util.SimplePool
-
-trait Imports
-
-trait Implicits {
-
-}
-
-// vim: set ts=2 sw=2 sts=2 et:
+package object async extends Implicits with Imports

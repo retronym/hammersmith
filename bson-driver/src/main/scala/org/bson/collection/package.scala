@@ -16,7 +16,6 @@
  */
 
 package org.bson
-package collection
 
 import org.bson.util._
 import org.bson.io.OutputBuffer
@@ -24,7 +23,7 @@ import org.bson.types.ObjectId
 import com.twitter.util.{ Future, SimplePool }
 import java.io.InputStream
 
-object `package` {
+package object collection {
   /**
    * TODO - Replace ThreadLocal with actor pipelines?
    * TODO - Execute around pattern
