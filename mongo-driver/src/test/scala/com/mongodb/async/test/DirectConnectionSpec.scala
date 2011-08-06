@@ -198,13 +198,13 @@ class DirectConnectionSpec extends Specification
     })
     mongo.insert(Document("foo" -> "bar", "bar" -> "baz"))(handler)
     ok must eventually { beSome(true) }
-    id must not(beNull[AnyRef].eventually)
+    id must not(beNull.eventually)
     // TODO - Implement 'count'
     var doc: Document = null
     mongo.findOne(Document("foo" -> "bar"))((_doc: Document) ⇒ {
       doc = _doc
     })
-    doc must not(beNull[AnyRef].eventually)
+    doc must not(beNull.eventually)
     doc must eventually(havePairs("foo" -> "bar", "bar" -> "baz"))
   }
 
